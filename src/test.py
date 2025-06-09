@@ -1,19 +1,21 @@
 import unittest
 from unittest.mock import patch, MagicMock
-import main
+import src.main as main
 
 class TestSyncAllForks(unittest.TestCase):
 
-    @patch("main.requests.post")
-    @patch("main.Github")
+    @patch("src.main.requests.post")
+    @patch("src.main.Github")
     def test_sync_all_forks_success_and_failure(self, mock_github_class, mock_post):
+        fake_token = "fake_token"
+
         # Mock Github instance and user repos
         mock_github = MagicMock()
         mock_user = MagicMock()
         mock_repo_fork = MagicMock()
         mock_repo_nonfork = MagicMock()
 
-        # Fork repo with parent (should attempt sync)
+        # Fork repo with parent (should be processed)
         mock_repo_fork.fork = True
         mock_repo_fork.parent = True
         mock_repo_fork.full_name = "user/forked_repo"
@@ -28,24 +30,23 @@ class TestSyncAllForks(unittest.TestCase):
         mock_github.get_user.return_value = mock_user
         mock_github_class.return_value = mock_github
 
-        # Mock requests.post to simulate a successful sync and a failed sync
+        # Simulate a successful sync response
         def post_side_effect(url, headers, json):
+            mock_resp = MagicMock()
             if "forked_repo" in url:
-                mock_resp = MagicMock()
                 mock_resp.status_code = 200
                 mock_resp.json.return_value = {"message": "Up to date"}
-                return mock_resp
             else:
-                mock_resp = MagicMock()
                 mock_resp.status_code = 400
                 mock_resp.json.return_value = {"message": "Error"}
-                return mock_resp
+            return mock_resp
 
         mock_post.side_effect = post_side_effect
 
-        results = main.sync_all_forks("fake_token")
+        # Call function
+        results = main.sync_all_forks(fake_token)
 
-        # It should only process the forked repo, skipping non-fork
+        # Assertions
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0]["repo"], "user/forked_repo")
         self.assertEqual(results[0]["status"], "synced")
