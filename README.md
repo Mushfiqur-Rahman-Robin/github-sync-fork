@@ -30,7 +30,14 @@ A Python tool to automatically sync all your forked GitHub repositories with the
    cd github-sync-fork
    ```
 
-2. **Install dependencies using uv**
+2. **Create virtual environment**
+
+   ```bash
+   uv venv
+   source .venv/bin/activate
+   ```
+
+3. **Install dependencies using uv**
 
    Dependencies are defined in `pyproject.toml`. To install them:
 
@@ -40,12 +47,12 @@ A Python tool to automatically sync all your forked GitHub repositories with the
 
    This command reads from `pyproject.toml` and installs the exact versions specified.
 
-3. **Set your GitHub token**
+4. **Set your GitHub token**
 
    Create a `.env` file in the root folder with:
 
    ```
-   GITHUB_TOKEN=your_personal_access_token_here
+   GITHUB_TOKEN=ghp_rest_of_the_personal_access_token_here
    ```
 
 ---
@@ -56,7 +63,7 @@ Run the sync script from the root directory:
 
 ```bash
 cd src/
-uv run python main.py
+uv run main.py
 ```
 
 It will process all your forked repositories and attempt to sync each with its upstream repo.
@@ -69,7 +76,7 @@ Run the test suite with uv:
 
 ```bash
 cd src/
-uv run pytest test.py
+pytest test.py
 ```
 
 ---
