@@ -8,7 +8,13 @@ dependencies = [
     "aiohttp>=3.12.11",
     "pygithub>=2.6.1",
     "pytest>=8.4.0",
-    "python-dotenv>=1.1.0",
     "requests>=2.32.3",
     "ruff>=0.11.13",
+    "click>=8.0.0",
 ]
+
+[project.scripts]
+github-sync-fork = "main:sync_all_forks_cli"
+
+[tool.uv]
+package = true
