@@ -62,15 +62,3 @@ The tool will then securely prompt you to enter your GitHub Personal Access Toke
 It will process all your forked repositories and attempt to sync each with its upstream repo, printing the status of each operation.
 
 ---
-
-## Testing
-
-To run the test suite, navigate to the project root directory and use pytest:
-
-```bash
-pytest src/test.py
-```
-
-This will execute the tests defined in `src/test.py`.
-
----
