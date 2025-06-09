@@ -6,11 +6,7 @@ class TestSyncAllForks(unittest.TestCase):
 
     @patch("main.requests.post")
     @patch("main.Github")
-    @patch("main.os.getenv")
-    def test_sync_all_forks_success_and_failure(self, mock_getenv, mock_github_class, mock_post):
-        # Setup mock environment variable
-        mock_getenv.return_value = "fake_token"
-
+    def test_sync_all_forks_success_and_failure(self, mock_github_class, mock_post):
         # Mock Github instance and user repos
         mock_github = MagicMock()
         mock_user = MagicMock()
@@ -47,7 +43,7 @@ class TestSyncAllForks(unittest.TestCase):
 
         mock_post.side_effect = post_side_effect
 
-        results = main.sync_all_forks()
+        results = main.sync_all_forks("fake_token")
 
         # It should only process the forked repo, skipping non-fork
         self.assertEqual(len(results), 1)

@@ -15,9 +15,9 @@ A Python tool to automatically sync all your forked GitHub repositories with the
 
 ## Prerequisites
 
-- Python 3.13+ (flexible with other versions as well)
-- GitHub Personal Access Token (PAT) with `repo` permissions
-- `uv` package manager installed
+- Python 3.13+
+- GitHub Personal Access Token (PAT) with `repo` scope.
+- `uv` Python package manager installed (see [uv installation](https://github.com/astral-sh/uv#installation)).
 
 ---
 
@@ -47,36 +47,30 @@ A Python tool to automatically sync all your forked GitHub repositories with the
 
    This command reads from `pyproject.toml` and installs the exact versions specified.
 
-4. **Set your GitHub token**
-
-   Create a `.env` file in the root folder with:
-
-   ```
-   GITHUB_TOKEN=ghp_rest_of_the_personal_access_token_here
-   ```
-
 ---
 
 ## Usage
 
-Run the sync script from the root directory:
+After installation, you can run the tool directly from your terminal:
 
 ```bash
-cd src/
-uv run main.py
+github-sync-fork
 ```
 
-It will process all your forked repositories and attempt to sync each with its upstream repo.
+The tool will then securely prompt you to enter your GitHub Personal Access Token (PAT). Input your token and press Enter to proceed.
+
+It will process all your forked repositories and attempt to sync each with its upstream repo, printing the status of each operation.
 
 ---
 
 ## Testing
 
-Run the test suite with uv:
+To run the test suite, navigate to the project root directory and use pytest:
 
 ```bash
-cd src/
-pytest test.py
+pytest src/test.py
 ```
+
+This will execute the tests defined in `src/test.py`.
 
 ---

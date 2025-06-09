@@ -1,16 +1,11 @@
 import os
 import requests
 from github import Github
-from dotenv import load_dotenv
+import click
+import getpass
 
-load_dotenv()
-
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-if not GITHUB_TOKEN:
-    raise EnvironmentError("Set GITHUB_TOKEN with write access to forks")
-
-def sync_all_forks():
-    gh = Github(GITHUB_TOKEN)
+def sync_all_forks(github_token):
+    gh = Github(github_token)
     me = gh.get_user()
     results = []
     for repo in me.get_repos():
@@ -21,7 +16,7 @@ def sync_all_forks():
         branch = repo.default_branch
         url = f"https://api.github.com/repos/{owner}/{name}/merge-upstream"
         headers = {
-            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Authorization": f"Bearer {github_token}",
             "Accept": "application/vnd.github+json"
         }
         resp = requests.post(url, headers=headers, json={"branch": branch})
@@ -37,7 +32,20 @@ def sync_all_forks():
             })
     return results
 
-if __name__ == "__main__":
-    sync_results = sync_all_forks()
-    for res in sync_results:
-        print(res)
+@click.command()
+@click.pass_context
+def sync_all_forks_cli(ctx):
+    """Synchronizes all your forked repositories with their upstream counterparts."""
+    click.echo("Please enter your GitHub Personal Access Token (PAT):")
+    token = getpass.getpass()
+
+    if not token:
+        click.echo("Error: GitHub token cannot be empty.", err=True)
+        ctx.exit(1)
+
+    results = sync_all_forks(token)
+    for res in results:
+        if res["status"] == "synced":
+            click.echo(f"Successfully synced {res['repo']}: {res['message']}")
+        else:
+            click.echo(f"Failed to sync {res['repo']}: {res.get('error', 'Unknown error')}", err=True)
