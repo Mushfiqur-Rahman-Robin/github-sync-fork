@@ -15,3 +15,7 @@ dependencies = [
 
 [project.scripts]
 github-sync-fork = "main:sync_all_forks_cli"
+
+[tool.uv]
+package = true
+src-layout = true
